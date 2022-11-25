@@ -1,0 +1,130 @@
+Step 1: Install the Container Registry CLI
+
+Install the IBM Cloud CLI so that you can run the IBM Cloud ibmcloud commands, see Getting started with the IBM Cloud CLI.
+Install the container-registry CLI plug-in.
+Step 2: Set up a namespace
+
+Create a namespace. The namespace is created in the resource group that you specify so that you can configure access to resources within the namespace at the resource group level. If you don't specify a resource group, and you don't target a resource group, the default resource group is used. Namespaces that are assigned to a resource group show in the Resource list page of the IBM Cloud console.
+
+Log in to IBM Cloud.
+
+
+ibmcloud login
+If you have a federated ID, use ibmcloud login --sso to log in. Enter your username and use the provided URL in your CLI output to retrieve your one-time passcode. If you have a federated ID, the login fails without the --sso and succeeds with the --sso option.
+
+You don't need to log in to Container Registry until you want to push an image, see Step 5: Push images to your namespace.
+
+Add a namespace to create your own image repository. Replace <my_namespace> with your preferred namespace.
+
+The namespace must be unique across all IBM Cloud accounts in the same region. Namespaces must have 4 - 30 characters, and contain lowercase letters, numbers, hyphens (-), and underscores (_) only. Namespaces must start and end with a letter or number.
+
+
+ibmcloud cr namespace-add <my_namespace>
+You can put the namespace in a resource group of your choice by using one of the following options.
+
+Before you create the namespace, run the ibmcloud target -g <resource_group> command, where <resource_group> is the resource group.
+Specify the resource group by using the -g option on the ibmcloud cr namespace-add command.
+If you have a problem when you try to create a namespace, see Why can't I add a namespace? for assistance.
+
+To ensure that your namespace is created, run the ibmcloud cr namespace-list command.
+
+
+ibmcloud cr namespace-list -v
+Step 3: Pull images from a registry to your local computer
+
+Install Docker or a tool of your choice, such as Podman.
+
+Install the Docker Engine CLI. For Windows® 8, or OS X Yosemite 10.10.x or earlier, install Docker Desktop instead. For more information about the version of Docker that is supported by IBM Cloud Container Registry, see Support for Docker.
+Install Podman.
+Download (pull) the image to your local computer. Replace <source_image> with the repository of the image and <tag> with the tag of the image that you want to use, for example, latest. For example, depending on the tool that you are using, run one of the following commands.
+
+If you are using Docker, run the following command.
+
+
+docker pull <source_image>:<tag>
+Example, where <source_image> is hello-world and <tag> is latest:
+
+
+docker pull hello-world:latest
+If you have problem when you try to pull a Docker image, see Why can't I push or pull a Docker image? for assistance. If you can't pull the most recent image by using the latest tag, see Why can't I pull the newest image by using the latest tag? for assistance.
+
+If you are using Podman, run the following command.
+
+
+podman pull <source_image>:<tag>
+Example, where <source_image> is hello-world and <tag> is latest:
+
+
+podman pull hello-world:latest
+Step 4: Tag the image
+
+To tag the image, replace <source_image> with the repository and <tag> with the tag of your local image that you pulled earlier. Replace <region> with the name of your region. Replace <my_namespace> with the namespace that you created in Set up a namespace. Define the repository and tag of the image that you want to use in your namespace by replacing <new_image_repo> and <new_tag>. For example, depending on the tool that you are using, run one of the following commands.
+
+To find the name of your region, run the ibmcloud cr region command.
+
+If you are using Docker, run the following command.
+
+
+docker tag <source_image>:<tag> <region>.icr.io/<my_namespace>/<new_image_repo>:<new_tag>
+Example, where <source_image> is hello-world, <tag> is latest, <region> is uk, <my_namespace> is namespace1, <new_image_repo> is hw_repo, and <new_tag> is 1:
+
+
+docker tag hello-world:latest uk.icr.io/namespace1/hw_repo:1
+If you are using Podman, run the following command.
+
+
+podman tag <source_image>:<tag> <region>.icr.io/<my_namespace>/<new_image_repo>:<new_tag>
+Example, where <source_image> is hello-world, <tag> is latest, <region> is uk, <my_namespace> is namespace1, <new_image_repo> is hw_repo, and <new_tag> is 1:
+
+
+podman tag hello-world:latest uk.icr.io/namespace1/hw_repo:1
+Step 5: Push images to your namespace
+
+Log in to IBM Cloud Container Registry by using one of the following options.
+
+To log in by using Docker, run the ibmcloud cr login command to log your local Docker daemon in to IBM Cloud Container Registry.
+
+
+ibmcloud cr login --client docker
+To log in by using Podman, run the ibmcloud cr login command to log in to IBM Cloud Container Registry.
+
+
+ibmcloud cr login --client podman
+To log in by using other clients, see Accessing your namespaces interactively.
+If you have a problem when you try to log in, see Why can't I log in to Container Registry? for assistance.
+
+Upload (push) the image to your namespace. Replace <my_namespace> with the namespace that you created in Set up a namespace. Replace <image_repo> and <tag> with the repository and the tag of the image that you chose when you tagged the image. For example, depending on the tool that you are using, run one of the following commands.
+
+If you are using Docker, run the following command.
+
+
+docker push <region>.icr.io/<my_namespace>/<image_repo>:<tag>
+Example, where <region> is uk, <my_namespace> is namespace1, <image_repo> is hw_repo, and <tag> is 1:
+
+
+docker push uk.icr.io/namespace1/hw_repo:1
+If you have a problem when you try to push a Docker image, see Why can't I push or pull a Docker image? for assistance.
+
+If you are using Podman, run the following command.
+
+
+podman push <region>.icr.io/<my_namespace>/<image_repo>:<tag>
+Example, where <region> is uk, <my_namespace> is namespace1, <image_repo> is hw_repo, and <tag> is 1:
+
+
+podman push uk.icr.io/namespace1/hw_repo:1
+Step 6: Verify that the image was pushed
+
+Verify that the image was pushed successfully by running the following command.
+
+
+ibmcloud cr image-list
+You set up a namespace in IBM Cloud Container Registry and pushed your first image to your namespace.
+
+Next steps in Container Registry
+
+Manage image security with Vulnerability Advisor.
+Review your service plans.
+Store and manage more images in your namespace.
+Define access policies.
+Set up clusters and worker nodes.
